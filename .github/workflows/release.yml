@@ -42,6 +42,12 @@ jobs:
           - os: ubuntu-22.04-arm
             artifact-name: stylua-linux-aarch64-musl
             cargo-target: aarch64-unknown-linux-musl
+          - os: ubuntu-22.04
+            artifact-name: stylua-linux-loongarch64
+            cargo-target: loongarch64-unknown-linux-gnu
+          - os: ubuntu-22.04
+            artifact-name: stylua-linux-loongarch64-musl
+            cargo-target: loongarch64-unknown-linux-musl
           - os: macos-latest
             artifact-name: stylua-macos-x86_64
             cargo-target: x86_64-apple-darwin
@@ -169,6 +175,12 @@ jobs:
           name: stylua-linux-aarch64
           path: /tmp/artifacts/linux-arm64
 
+      - name: Download Linux loong64 binary
+        uses: actions/download-artifact@v4
+        with:
+          name: stylua-linux-loongarch64
+          path: /tmp/artifacts/linux-loong64
+
       - name: Download macOS x64 binary
         uses: actions/download-artifact@v4
         with:
@@ -189,14 +201,14 @@ jobs:
 
       - name: Extract binaries into platform packages
         run: |
-          for PLATFORM in linux-x64 linux-arm64 darwin-x64 darwin-arm64 win32-x64; do
+          for PLATFORM in linux-x64 linux-arm64 linux-loong64 darwin-x64 darwin-arm64 win32-x64; do
             unzip -o /tmp/artifacts/$PLATFORM/release.zip \
               -d "$GITHUB_WORKSPACE/stylua-npm-bin/platforms/$PLATFORM/"
           done
 
       - name: Publish platform packages to npm
         run: |
-          for PLATFORM in linux-x64 linux-arm64 darwin-x64 darwin-arm64 win32-x64; do
+          for PLATFORM in linux-x64 linux-arm64 linux-loong64 darwin-x64 darwin-arm64 win32-x64; do
             cd "$GITHUB_WORKSPACE/stylua-npm-bin/platforms/$PLATFORM"
             npm publish
           done
@@ -233,7 +245,7 @@ jobs:
 
       - uses: docker/build-push-action@v5
         with:
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64,linux/arm64, linux/loong64
           push: true
           context: .
           file: Dockerfile

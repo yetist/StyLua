@@ -15,7 +15,7 @@ PACKAGE_JSON_FILE = "stylua-npm-bin/package.json"
 WASM_PACKAGE_JSON_FILE = "wasm/package.json"
 PLATFORM_PACKAGE_JSON_FILES = [
     f"stylua-npm-bin/platforms/{p}/package.json"
-    for p in ["linux-x64", "linux-arm64", "darwin-x64", "darwin-arm64", "win32-x64"]
+    for p in ["linux-x64", "linux-arm64", "linux-loong64", "darwin-x64", "darwin-arm64", "win32-x64"]
 ]
 
 assert len(sys.argv) == 2, "Usage: .github/release.py <version number>"
